@@ -1,0 +1,48 @@
+#!/bin/bash
+DIRECTORY="$HOME/.autowall"
+
+# check argument count
+if [ "$#" -eq 2 ]; then 
+    monitors=$1
+    keyword=$2
+elif [ "$#" -eq 1 ]; then
+    keyword=$1
+    monitors=1
+fi
+
+declare -A uscats
+uscats=(
+    ["All"]='1065976'
+    ["1080p"]='1339107'
+    ["4K"]='1339090'
+    ["Ultra_Wide"]='1339089'
+    ["Background"]='1339276'
+    ["Lock_Screen"]='1339070'
+    ["Nature"]='1065376'
+    ["Tumblr"]='1111644'
+    ["Black"]='1101680'
+    ["Flower"]='1100232'
+    ["Funny"]='1111682'
+    ["Cute"]='1111680'
+    ["Cool"]='1111678'
+    ["Fall"]='1100229'
+    ["Love"]='1066280'
+    ["Design"]='1066276'
+    ["Christmas"]='1066273'
+    ["Travel"]='1065428'
+    ["Beach"]='1065423'
+    ["Car"]='1065408'
+    ["Sports"]='1065402'
+    ["Animal"]='1065390'
+    ["People"]='1065386'
+    ["Music"]='1065384'
+    ["Summer"]='1065380'
+)
+
+if [ ! -d "$DIRECTORY" ]; then
+    mkdir $DIRECTORY
+fi
+
+uspotd="https://source.unsplash.com/collection/${uscats[${keyword}]}/1920x1080/daily"
+wget -O $DIRECTORY/paper $uspotd
+feh --bg-scale $DIRECTORY/paper
