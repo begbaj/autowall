@@ -59,4 +59,4 @@ fi
 
 uspotd="https://source.unsplash.com/collection/${uscats[${keyword}]}/1920x1080/daily"
 wget -qO $DIRECTORY/paper $uspotd
-feh --bg-scale $DIRECTORY/paper
+feh --no-fehbg --bg-scale $DIRECTORY/paper
