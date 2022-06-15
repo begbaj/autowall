@@ -18,18 +18,30 @@ from os import getenv as env
 from os import path
 from os import mkdir
 from os import system
+from sys import argv
 
 ALLOW = False
+PROVIDER = "wallheavenh"
+PROVIDER_HINT = ""
+AVAILABLE_PROVIDERS = ["wallheaven"]
+URL_SEARCH = "https://wallhaven.cc/api/v1/search"
+API_KEY = None
 
 def main():
     """ Main
     """
-    PROVIDER = "wallheavenh"
-    PROVIDER_HINT = ""
-    AVAILABLE_PROVIDERS = ["wallheaven"]
-    URL_SEARCH = "https://wallhaven.cc/api/v1/search"
-    API_KEY = None
+    global ALLOW
+    global PROVIDER
+    global PROVIDER_HINT
+    global AVAILABLE_PROVIDERS
+    global URL_SEARCH
+    global API_KEY
+    if len(argv) == 1:
+        ALLOW = True
+        print("No arguments passed")
+        return
 
+    log.basicConfig(level=log.ERROR)
     if env("AUTOWALL_API") is None:
         log.warning("No api key provided!")
     else:
@@ -74,9 +86,7 @@ def main():
     http_args=""
     http_header = None
 
-
     if args.v is not None:
-        global ALLOW
         ALLOW = True
     if args.q is not None:
         http_args += f"q={args.q[0]}"
