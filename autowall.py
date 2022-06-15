@@ -51,9 +51,9 @@ def main():
     parser.add_argument("-q", type=str, nargs=1, metavar="query",
             default=None, help="Search query - Your main way of finding what you're looking for.")
     parser.add_argument("-c", type=int, nargs=1, metavar="categories",
-            default=111, help="Turn categories on(1) or off(0). Must provide 3 bits, default is 111")
+            default=None, help="Turn categories on(1) or off(0). Must provide 3 bits, default is 111")
     parser.add_argument("-p", type=int, nargs=1, metavar="purity",
-            default=100, help="Turn purities on(1) or off(0). Must provide 3 bits, default is 100")
+            default=None, help="Turn purities on(1) or off(0). Must provide 3 bits, default is 100")
     parser.add_argument("-s", type=int, nargs=1, metavar="sorting",
             default=None, help="Method of sorting results:\n"\
                             "0 - date added (default)\n"\
@@ -64,7 +64,7 @@ def main():
                             "5 - toplist")
 
     parser.add_argument("-o", type=int, nargs=1, metavar="order",
-					default=0, help="Sorting order: 0 - desc (default); 1 - asc")
+					default=None, help="Sorting order: 0 - desc (default); 1 - asc")
 
     parser.add_argument("-r", type=str, nargs=1, metavar="resolution",
 					default=None, help="Minimum resolution allowed")
@@ -94,7 +94,7 @@ def main():
         http_args += f"&categories={str(args.c).zfill(3)}"
 
     if args.p is not None:
-        if str(args.p[0])[-1] == "1":
+        if str(args.p)[-1] == "1":
             if API_KEY is None:
                 log.error("no api key provided")
                 print("you must provide a API key to get NSFW content")
@@ -115,7 +115,7 @@ def main():
             http_args += "&sorting=toplist"
 
     if args.o is not None:
-        if args.o[0] == 1:
+        if args.o == 1:
             http_args += "&order=asc"
 
     if args.r is not None:
