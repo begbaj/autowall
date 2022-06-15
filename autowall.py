@@ -1,3 +1,4 @@
+#!/bin/python
 """
 File: autowall.py
 Author: Began Bajrami
