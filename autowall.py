@@ -89,7 +89,7 @@ def main():
     if args.v is not None:
         ALLOW = True
     if args.q is not None:
-        http_args += f"q={args.q[0]}"
+        http_args += f"q={args.q}"
     if args.c is not None:
         http_args += f"&categories={str(args.c).zfill(3)}"
 
@@ -105,15 +105,15 @@ def main():
         http_args += f"&purity={str(args.p).zfill(3)}"
 
     if args.s is not None:
-        if args.s[0] == 1:
+        if args.s == "1":
             http_args += "&sorting=relevance"
-        elif args.s[0] == 2:
+        elif args.s == "2":
             http_args += "&sorting=random"
-        elif args.s[0] == 3:
+        elif args.s == "3":
             http_args += "&sorting=views"
-        elif args.s[0] == 4:
+        elif args.s == "4":
             http_args += "&sorting=favorites"
-        elif args.s[0] == 5:
+        elif args.s == "5":
             http_args += "&sorting=toplist"
 
     if args.o is not None:
