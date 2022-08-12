@@ -8,6 +8,7 @@ Description: Simple wallpaper setter script
 
 """
 import requests
+import random
 import builtins as __builtin__
 import re
 import argparse
@@ -18,6 +19,7 @@ from os import getenv as env
 from os import path
 from os import mkdir
 from os import system
+from shutil import copyfile
 from sys import argv
 
 ALLOW = False
@@ -79,13 +81,26 @@ def main():
 					default="16x9", help="Aspect ratio (default: 16x9)")
     parser.add_argument("-C", type=str, metavar="color",
 					default=None, help="Search by color.")
-    parser.add_argument("-v", action=argparse.BooleanOptionalAction)
+    parser.add_argument("-v", help="Show query and downloaded image link", action=argparse.BooleanOptionalAction)
+    parser.add_argument("-D", help="Download only, don't set the bakcgrouond", action=argparse.BooleanOptionalAction)
+    parser.add_argument("-B", help="Bakcup current wallpaper", action=argparse.BooleanOptionalAction)
 
     args = parser.parse_args()
 
     http_args=""
     http_header = None
 
+    if args.B:
+        random_string = ''
+        for _ in range(10):
+            # Considering only upper and lowercase letters
+            random_integer = random.randint(97, 97 + 26 - 1)
+            flip_bit = random.randint(0, 1)
+            # Convert to lowercase if the flip bit is on
+            random_integer = random_integer - 32 if flip_bit == 1 else random_integer
+            # Keep appending random characters using chr(x)
+            random_string += (chr(random_integer))
+        copyfile(path.expanduser("~/.local/share/autowall/paper"),path.expanduser(f"~/.local/share/autowall/{random_string}"))
     if args.v is not None:
         ALLOW = True
     if args.q is not None:
@@ -158,7 +173,8 @@ def main():
     with open(autodir + "paper", "wb") as img_file:
         shutil.copyfileobj(img_raw, img_file)
 
-    system(f"feh --no-fehbg --bg-scale {autodir}/paper")
+    if not args.D:
+        system(f"feh --no-fehbg --bg-scale {autodir}/paper")
 
 def print(msg):
     if ALLOW:
