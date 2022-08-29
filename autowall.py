@@ -12,6 +12,7 @@ import builtins as __builtin__
 import re
 import argparse
 import shutil
+import random
 import logging as log
 from urllib.parse import quote
 from os import getenv as env
@@ -28,8 +29,6 @@ URL_SEARCH = "https://wallhaven.cc/api/v1/search"
 API_KEY = None
 
 def main():
-    """ Main
-    """
     global ALLOW
     global PROVIDER
     global PROVIDER_HINT
@@ -75,11 +74,13 @@ def main():
     parser.add_argument("--seed", type=str, metavar="seed",
 					default=None, help="Optional seed for random results")
 
+
     parser.add_argument("-R", type=str, metavar="ratio",
 					default="16x9", help="Aspect ratio (default: 16x9)")
     parser.add_argument("-C", type=str, metavar="color",
 					default=None, help="Search by color.")
     parser.add_argument("-v", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--random", help="select a random result", action=argparse.BooleanOptionalAction)
 
     args = parser.parse_args()
 
@@ -141,12 +142,15 @@ def main():
     search_query = URL_SEARCH + "/?" + quote(http_args, "?=&")
     r = requests.get(search_query,  headers=http_header)
     print(search_query)
-    jsonres = r.json() 
-    if len(jsonres["data"]) == 0:
+    jsonres = r.json()
+    lenjson = len(jsonres["data"])
+    if lenjson == 0:
         print("no results found")
         return
-
-    url = r.json()["data"][0]["path"] 
+    result = 0
+    if args.random:
+        result = random.randint(0, lenjson)
+    url = r.json()["data"][result]["path"]
     print(url)
 
     # DOWNLOAD
@@ -163,6 +167,3 @@ def main():
 def print(msg):
     if ALLOW:
         __builtin__.print(msg)
-
-if __name__ == "__main__":
-    main()

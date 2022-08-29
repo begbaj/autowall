@@ -1,0 +1,34 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/began/sources/autowall/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210905.0/
+ALLOW	autowall.py	/^ALLOW = False$/;"	v
+ALLOW	src/main.py	/^ALLOW = False$/;"	v
+API_KEY	autowall.py	/^API_KEY = None$/;"	v
+API_KEY	src/main.py	/^API_KEY = None$/;"	v
+AVAILABLE_PROVIDERS	autowall.py	/^AVAILABLE_PROVIDERS = ["wallheaven"]$/;"	v
+AVAILABLE_PROVIDERS	src/main.py	/^AVAILABLE_PROVIDERS = ["wallheaven"]$/;"	v
+Autowall	README.md	/^# Autowall$/;"	c
+PROVIDER	autowall.py	/^PROVIDER = "wallheavenh"$/;"	v
+PROVIDER	src/main.py	/^PROVIDER = "wallheavenh"$/;"	v
+PROVIDER_HINT	autowall.py	/^PROVIDER_HINT = ""$/;"	v
+PROVIDER_HINT	src/main.py	/^PROVIDER_HINT = ""$/;"	v
+URL_SEARCH	autowall.py	/^URL_SEARCH = "https:\/\/wallhaven.cc\/api\/v1\/search"$/;"	v
+URL_SEARCH	src/main.py	/^URL_SEARCH = "https:\/\/wallhaven.cc\/api\/v1\/search"$/;"	v
+__builtin__	autowall.py	/^import builtins as __builtin__$/;"	I	nameref:module:builtins
+__builtin__	src/main.py	/^import builtins as __builtin__$/;"	I	nameref:module:builtins
+env	autowall.py	/^from os import getenv as env$/;"	x	nameref:unknown:getenv
+env	src/main.py	/^from os import getenv as env$/;"	x	nameref:unknown:getenv
+log	autowall.py	/^import logging as log$/;"	I	nameref:module:logging
+log	src/main.py	/^import logging as log$/;"	I	nameref:module:logging
+main	autowall.py	/^def main():$/;"	f
+main	src/main.py	/^def main():$/;"	f
+print	autowall.py	/^def print(msg):$/;"	f
+print	src/main.py	/^def print(msg):$/;"	f
