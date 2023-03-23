@@ -26,6 +26,7 @@ __builtin__	autowall.py	/^import builtins as __builtin__$/;"	I	nameref:module:bu
 __builtin__	src/main.py	/^import builtins as __builtin__$/;"	I	nameref:module:builtins
 env	autowall.py	/^from os import getenv as env$/;"	x	nameref:unknown:getenv
 env	src/main.py	/^from os import getenv as env$/;"	x	nameref:unknown:getenv
+init_parser	src/main.py	/^def init_parser(parser):$/;"	f
 log	autowall.py	/^import logging as log$/;"	I	nameref:module:logging
 log	src/main.py	/^import logging as log$/;"	I	nameref:module:logging
 main	autowall.py	/^def main():$/;"	f

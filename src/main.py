@@ -20,9 +20,7 @@ AVAILABLE_PROVIDERS = ["wallheaven"]
 URL_SEARCH = "https://wallhaven.cc/api/v1/search"
 API_KEY = None
 
-def main():
-    log.basicConfig(level=log.ERROR)
-    parser = argparse.ArgumentParser(description="Simple wallpaper setter")
+def init_parser(parser):
     parser.add_argument("-q", type=str, metavar="query",
             default=None, help="Search query - Your main way of finding what you're looking for.")
     parser.add_argument("-c", type=str, metavar="categories",
@@ -39,7 +37,6 @@ def main():
                             "5 - toplist")
     parser.add_argument("-o", type=str, metavar="order",
 					default=None, help="Sorting order: 0 - desc (default); 1 - asc")
-
     parser.add_argument("-r", type=str, metavar="resolution",
 					default=None, help="Minimum resolution allowed")
     parser.add_argument("--exact-res", type=str, metavar="exact_resolution",
@@ -51,8 +48,13 @@ def main():
     parser.add_argument("-C", type=str, metavar="color",
 					default=None, help="Search by color.")
     parser.add_argument("-v", action=argparse.BooleanOptionalAction)
-    parser.add_argument("--random", help="select a random result", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--random", help="select a random result",
+            action=argparse.BooleanOptionalAction)
 
+def main():
+    log.basicConfig(level=log.ERROR)
+    parser = argparse.ArgumentParser(description="Simple wallpaper setter")
+    init_parser(parser)
     args = parser.parse_args()
 
 def print(msg):

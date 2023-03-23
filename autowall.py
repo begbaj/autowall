@@ -167,3 +167,6 @@ def main():
 def print(msg):
     if ALLOW:
         __builtin__.print(msg)
+
+if __name__ == "__main__":
+    main()
