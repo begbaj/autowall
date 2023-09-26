@@ -81,11 +81,16 @@ def main():
 					default=None, help="Search by color.")
     parser.add_argument("-v", action=argparse.BooleanOptionalAction)
     parser.add_argument("--random", help="select a random result", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--keep", type=bool,action=argparse.BooleanOptionalAction, help="Set the last wallpeper downloaded")
 
     args = parser.parse_args()
 
     http_args=""
     http_header = None
+    
+    if args.keep:
+        set_wallpaper(keep=True)
+        return
 
     if args.v is not None:
         ALLOW = True
@@ -152,16 +157,21 @@ def main():
         result = random.randint(0, lenjson)
     url = r.json()["data"][result]["path"]
     print(url)
+    download_and_set(url)
 
+def download_and_set(url):
     # DOWNLOAD
     img_raw = requests.get(url, stream=True).raw
     img_raw.decode_content = True
-    autodir = path.expanduser("~/.local/share/autowall/")
-    if not path.isdir(autodir):
-       mkdir(autodir) 
-    with open(autodir + "paper", "wb") as img_file:
-        shutil.copyfileobj(img_raw, img_file)
+    set_wallpaper(img_raw, img_file)
 
+def set_wallpaper(img_raw=None, keep=False):
+    autodir = path.expanduser("~/.local/share/autowall/")
+    if not keep:
+        if not path.isdir(autodir):
+           mkdir(autodir) 
+        with open(autodir + "paper", "wb") as img_file:
+            shutil.copyfileobj(img_raw, img_file)
     system(f"feh --no-fehbg --bg-scale {autodir}/paper")
 
 def print(msg):
