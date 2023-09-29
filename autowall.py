@@ -16,10 +16,7 @@ import random
 import logging as log
 from urllib.parse import quote
 from os import getenv as env
-from os import path
-from os import mkdir
-from os import system
-from os import listdir
+import os
 from sys import argv
 
 ALLOW = False
@@ -28,7 +25,7 @@ PROVIDER_HINT = ""
 AVAILABLE_PROVIDERS = ["wallheaven"]
 URL_SEARCH = "https://wallhaven.cc/api/v1/search"
 API_KEY = None
-autodir = path.expanduser("~/.local/share/autowall/")
+autodir = os.path.expanduser("~/.local/share/autowall/")
 
 def main():
     log.basicConfig(level=log.ERROR)
@@ -57,6 +54,8 @@ def main():
                             "3 - views\n"\
                             "4 - favorites\n"\
                             "5 - toplist")
+    parser.add_argument("--ai", type=bool,
+                        action=argparse.BooleanOptionalAction, help="Allow AI art")
 
     parser.add_argument("-o", type=str, metavar="order",
 					default=None, help="Sorting order: 0 - desc (default); 1 - asc")
@@ -106,7 +105,7 @@ def main():
             return
     # todo: list available papers
     if args.list_all:
-        files = listdir(autodir)
+        files = os.listdir(autodir)
         for file in files:
             print(file, 1)
         return
@@ -117,7 +116,7 @@ def main():
             paper = f"{autodir}paper"
             name = f"{autodir}{args.keep}"
             shutil.copy(paper, name)
-            if path.exists(name):
+            if os.path.exists(name):
                 print(f"wallpaper successfully saved to {name}", 1)
             else:
                 print(f"something went wrong :/", 1)
@@ -185,6 +184,8 @@ def url_composer(args) -> tuple:
         http_args += f"&ratios={args.R}"
     if args.C is not None:
         http_args += f"&colors={args.C}"
+    if args.ai:
+        http_args += f"&ai_art_filter=0"
 
     search_query = URL_SEARCH + "/?" + quote(http_args, "?=&")
     return (search_query, http_header)
@@ -193,14 +194,14 @@ def download(url):
     # DOWNLOAD
     img_raw = requests.get(url, stream=True).raw
     img_raw.decode_content = True
-    if not path.isdir(autodir):
-       mkdir(autodir) 
+    if not os.path.isdir(autodir):
+       os.mkdir(autodir) 
     with open(autodir + "paper", "wb") as img_file:
         shutil.copyfileobj(img_raw, img_file)
 
 def setw(filename="paper"):
     try:
-        system(f"feh --no-fehbg --bg-scale {autodir}/{filename}")
+        os.system(f"feh --no-fehbg --bg-scale {autodir}/{filename}")
     except:
         raise FileNotFoundError
 
