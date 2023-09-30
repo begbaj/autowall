@@ -41,6 +41,8 @@ def main():
         API_KEY = env("AUTOWALL_API")
 
     parser = argparse.ArgumentParser(description="Simple wallpaper setter")
+    parser.add_argument("--id", type=str, metavar="id",
+            default=None, help="wallpaper id")
     parser.add_argument("-q", type=str, metavar="query",
             default=None, help="Search query - Your main way of finding what you're looking for.")
     parser.add_argument("-c", type=str, metavar="categories",
@@ -90,6 +92,10 @@ def main():
 
     if args.v is not None:
         ALLOW = True
+
+    if args.id is not None:
+        download_id(args.id)
+        return
 
     if args.use_last:
         setw()
@@ -150,6 +156,11 @@ def main():
         id = jsonres["data"][result]["id"]
         download(url,id)
         setw()
+
+def download_id(id):
+    url = f"https://w.wallhaven.cc/full/gp/wallhaven-{id}.jpg"
+    download(url, id)
+    setw()
 
 def url_composer(args) -> tuple:
     http_args=""
