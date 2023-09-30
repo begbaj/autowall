@@ -29,6 +29,7 @@ autodir = os.path.expanduser("~/.local/share/autowall/")
 
 def main():
     log.basicConfig(level=log.ERROR)
+    check_default()
 
     if len(argv) == 1:
         print("No arguments passed", 1)
@@ -77,7 +78,8 @@ def main():
     parser.add_argument("-v", help="Verbose output", action=argparse.BooleanOptionalAction)
     parser.add_argument("--random", help="select a random result", action=argparse.BooleanOptionalAction)
 
-    parser.add_argument("--use-last", type=bool,action=argparse.BooleanOptionalAction, help="Set the last wallpeper downloaded")
+    parser.add_argument("--use-last", type=bool,action=argparse.BooleanOptionalAction, help="Set the last used wallpaper")
+    parser.add_argument("--use-downloaded", type=bool,action=argparse.BooleanOptionalAction, help="Set the last downloaded wallpaper")
     parser.add_argument("-u","--use", default=None, type=str, help="Set one of the previously downloaded wallpapers")
     parser.add_argument("-l","--list-all", type=bool,action=argparse.BooleanOptionalAction, help="List downloaded wallpapers")
     parser.add_argument("--keep", type=str, help="Save current wallpaper")
@@ -93,8 +95,12 @@ def main():
         setw()
         return
 
+    if args.use_downloaded:
+        setw(config('last_downloaded'))
+        return
+
     if args.use is not None:
-        filename = "paper"
+        filename = config("last_used")
         if args.use != "":
             filename = args.use
         try:
@@ -113,11 +119,12 @@ def main():
         if args.keep == "":
             print("what should we name it?", 1)
         else:
-            paper = f"{autodir}paper"
+            paper = f"{autodir}{config('last_downloaded')}"
             name = f"{autodir}{args.keep}"
             shutil.copy(paper, name)
             if os.path.exists(name):
                 print(f"wallpaper successfully saved to {name}", 1)
+                config('last_downloaded', str(args.keep))
             else:
                 print(f"something went wrong :/", 1)
         return
@@ -136,8 +143,10 @@ def main():
         result = 0
         if args.random:
             result = random.randint(0, lenjson)
-        url = r.json()["data"][result]["path"]
-        download(url)
+        jsonres = r.json()
+        url = jsonres["data"][result]["path"]
+        id = jsonres["data"][result]["id"]
+        download(url,id)
         setw()
 
 def url_composer(args) -> tuple:
@@ -190,20 +199,68 @@ def url_composer(args) -> tuple:
     search_query = URL_SEARCH + "/?" + quote(http_args, "?=&")
     return (search_query, http_header)
 
-def download(url):
+def download(url,id):
     # DOWNLOAD
-    img_raw = requests.get(url, stream=True).raw
-    img_raw.decode_content = True
-    if not os.path.isdir(autodir):
-       os.mkdir(autodir) 
-    with open(autodir + "paper", "wb") as img_file:
-        shutil.copyfileobj(img_raw, img_file)
-
-def setw(filename="paper"):
     try:
-        os.system(f"feh --no-fehbg --bg-scale {autodir}/{filename}")
-    except:
-        raise FileNotFoundError
+        os.remove(f"{autodir}/{config('last_downloaded')}") 
+    except FileNotFoundError:
+        print(f"File not found. Skipped.")
+    except PermissionError:
+        print(f"You do not have permission to delete. Skipped.")
+    except Exception as e:
+        print(f"An error occurred while deleting the file: {e}")
+    finally:
+        img_raw = requests.get(url, stream=True).raw
+        img_raw.decode_content = True
+        if not os.path.isdir(autodir):
+           os.mkdir(autodir) 
+        with open(f"{autodir}{id}", "wb") as img_file:
+            shutil.copyfileobj(img_raw, img_file)
+
+        config('last_downloaded', id)
+    
+
+def check_default():
+    config('last_used')
+    config('last_downloaded')
+
+def config(name:str, value='') -> str:
+    """
+    name:   configuration name
+    rw:     'r' or 'w'
+    """
+    path = f"{autodir}.{name}"
+    if not os.path.exists(path):
+        with open(path, 'w') as file:
+            file.write('')
+
+    if value != '':
+        rw = 'w'
+    else:
+        rw = 'r'
+
+    with open(path, f'{rw}') as file:
+        if rw == 'r':
+            return str(file.read())
+        elif rw == 'w' and value:
+            file.write(str(value))
+            return str(value)
+
+def setw(filename:str=''):
+    try:
+        if filename == '':
+            filename = config('last_used') 
+            if not os.path.exists(f"{autodir}/{filename}") or filename == "":
+                filename = config('last_downloaded')
+        if os.path.exists(f"{autodir}/{filename}"):
+            os.system(f"feh --no-fehbg --bg-scale {autodir}/{filename}")
+            config('last_used', filename)
+        else:
+            config('last_used','')
+            config('last_downloaded','')
+            print(f"Wallpaper {filename} moved or deleted: use autowall --list to show available wallpapers and autowall -u <name> set a wallpaper", 1)
+    except Exception as e:
+        print(f"Error: {e}")
 
 def print(msg, bypass=0):
     if ALLOW or bypass == 1:
