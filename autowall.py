@@ -96,7 +96,9 @@ def main():
         return
 
     if args.use_downloaded:
-        setw(config('last_downloaded'))
+        last = config('last_downloaded')
+        setw(last)
+        config('last_used', last)
         return
 
     if args.use is not None:
