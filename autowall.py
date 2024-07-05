@@ -51,12 +51,13 @@ def main():
             default=None, help="Turn purities on(1) or off(0). Must provide 3 bits, default is 100")
     parser.add_argument("-s", type=str, metavar="sorting",
             default=None, help="Method of sorting results:\n"\
-                            "0 - date added (default)\n"\
-                            "1 - relevance\n"\
-                            "2 - random\n"\
-                            "3 - views\n"\
-                            "4 - favorites\n"\
-                            "5 - toplist")
+                            "0 - date added (default); \n"\
+                            "1 - relevance; \n"\
+                            "2 - random; \n"\
+                            "3 - views; \n"\
+                            "4 - favorites; \n"\
+                            "5 - toplist.")
+
     parser.add_argument("--ai", type=bool,
                         action=argparse.BooleanOptionalAction, help="Allow AI art")
 
@@ -85,6 +86,7 @@ def main():
     parser.add_argument("-u","--use", default=None, type=str, help="Set one of the previously downloaded wallpapers")
     parser.add_argument("-l","--list-all", type=bool,action=argparse.BooleanOptionalAction, help="List downloaded wallpapers")
     parser.add_argument("--keep", type=str, help="Save current wallpaper")
+    
 
     args = parser.parse_args()
     r = None
@@ -143,22 +145,27 @@ def main():
         neww = True
         (query, header) = url_composer(args)
         r = requests.get(query,  headers=header)
-        jsonres = r.json()
-        lenjson = len(jsonres["data"])
-        if lenjson == 0:
-            print("no results found")
-            return
-        result = 0
-        if args.random:
-            result = random.randint(0, lenjson)
-        jsonres = r.json()
-        url = jsonres["data"][result]["path"]
-        id = jsonres["data"][result]["id"]
-        download(url,id)
-        setw()
+        try:
+            jsonres = r.json()
+            lenjson = len(jsonres["data"])
+            if lenjson == 0:
+                print("no results found")
+                return
+            result = 0
+            if args.random:
+                result = random.randint(0, lenjson)
+            jsonres = r.json()
+            url = jsonres["data"][result]["path"]
+            id = jsonres["data"][result]["id"]
+            download(url,id)
+            setw()
+        except requests.JSONDecodeError:
+            print("There was an error decoding query response, check wallheaven.cc status (probably server is down).",1)
+        except Exception as err:
+            print(f"there was an unexpected error",1)
 
 def download_id(id):
-    url = f"https://w.wallhaven.cc/full/gp/wallhaven-{id}.jpg"
+    url = f"https://w.wallhaven.cc/full/gp/wallhaven-{id}"
     download(url, id)
     setw()
 
