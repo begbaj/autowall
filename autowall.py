@@ -108,8 +108,11 @@ autowall --use-last\n',
 
     # Bing provider specific arguments
     bingp = subparsers.add_parser("bing", help="bing provider")
-    bingp.add_argument("--daily", action="store_true", help="Use the daily Bing wallpaper.")
-    bingp.add_argument("--random", action="store_true", help="Use a random Bing wallpaper.")
+    bingp.add_argument("-d", action="store_true", help="Use the daily Bing wallpaper.")
+    bingp.add_argument("-r", action="store_true", help="Use a random Bing wallpaper.")
+    bingp.add_argument("--uhd", action="store_true", help="4K wallpaper")
+    bingp.add_argument("--region", help="Set a specific region, by default it is random")
+    bingp.add_argument("--resolution", help="Set a specific resolution, by default it is 1920")
 
     if len(argv) == 1:
         parser.print_help()
@@ -204,15 +207,14 @@ def handle_wh(args):
             print(f"There was an unexpected error: {err}", 1)
 
 def handle_bing(args):
-    if args.random:
-        # Fetch a random Bing wallpaper (from the past 7 days)
-        idx = random.randint(0, 7)
-        bing_url = f"{BING_API}/?resolution=1920&format=image&idx={idx}"
-        download_bing_wallpaper(bing_url)
+    resolution = "1920"
+    if args.uhd:
+        resolution = "UHD"
+    if args.r:
+        bing_url = f"{BING_API}/?resolution={resolution}&format=image&index=random&mkt=random"
     else:
-        # Default behavior - Use today's Bing wallpaper
         bing_url = f"{BING_API}/?resolution=1920&format=image"
-        download_bing_wallpaper(bing_url)
+    download_bing_wallpaper(bing_url)
     setw()
 
 def download_bing_wallpaper(url):
