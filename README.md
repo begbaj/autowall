@@ -1,8 +1,15 @@
 # Autowall
-Autowall is a very simple script to automatically download and set wallpapers from [Wallhaven.cc](https://wallhaven.cc/)
+Simple program to manage your window manager's wallpaper. 
+Currently supported providers:
+  [Wallhaven.cc](https://wallhaven.cc/)
+  [Bing](https://bingwallpaper.microsoft.com/win/en/bing/bing-wallpaper/)
+
+## Features
+- download from multiple providers (wallhaven, bing)
+- save and manage wallpapers locally for later use with --keep and --use commands
 
 ## Installation
-You need to have a wm that uses [feh](https://github.com/derf/feh) to set wallpaper.
+You need to have a window manager that uses [feh](https://github.com/derf/feh) to set wallpaper.
 This is a tool primarily designed for window manager users and not for desktop environments.
 
 Just clone and run ` sh install.sh `.
