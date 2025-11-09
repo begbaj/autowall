@@ -2,8 +2,6 @@
 """
 File: autowall.py
 Author: Began Bajrami
-Email: beganbajrami@email.com
-Github: https://github.com/begbaj
 Description: Simple wallpaper setter script
 """
 
